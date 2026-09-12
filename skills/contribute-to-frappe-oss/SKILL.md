@@ -3,9 +3,9 @@ name: contribute-to-frappe-oss
 description: >
   This skill should be used when the user asks to "find a Frappe issue to work on",
   "contribute to Frappe open source", "help me fix a bug in frappe/frappe or
-  frappe/erpnext", "find a good first issue in ERPNext", or "open a PR against
-  Frappe". Covers finding an issue, understanding it, and preparing a pull request
-  using GitHub tools.
+  frappe/erpnext", "find a good first issue in ERPNext", "fetch easy issues and fix
+  them", or "open a PR against Frappe". Covers finding an issue, understanding it,
+  reproducing and fixing it, and preparing a pull request using GitHub tools.
 metadata:
   version: "0.1.0"
 ---
@@ -29,11 +29,14 @@ issue-selection heuristics, and PR checklist before starting a contribution sess
 3. **Read before writing code.** Fetch `CONTRIBUTING.md` and any linked coding
    standards for the repo; Frappe's Python style and test conventions differ from
    generic Python projects.
-4. **Reproduce and diagnose** the issue locally when possible before proposing a
-   fix; don't guess at root cause from the issue title alone.
+4. **Reproduce, fix, and verify** using the `frappe-dev-container` skill - reproduce
+   the issue in a real bench before proposing a fix, don't guess at root cause from
+   the issue title alone, and re-run the repro (plus relevant tests) against the fix
+   before considering it done.
 5. **Open the PR** referencing the issue number, following the repo's PR template,
-   and summarizing what changed and why. Never claim a maintainer has pre-approved
-   the approach - PR review timelines and outcomes are up to Frappe's maintainers.
+   and summarizing what changed and why, including how it was verified. Never claim
+   a maintainer has pre-approved the approach - PR review timelines and outcomes are
+   up to Frappe's maintainers.
 
 Use `frappe-docs-lookup` alongside this skill whenever the fix touches framework
 behavior you're not certain about - check the documented behavior before assuming

@@ -11,11 +11,26 @@ metadata:
 
 # Frappe Documentation Lookup
 
-Use the `frappe` MCP server's documentation tools - `search_frappe_docs` and
+Use the `frappe-docs` MCP server's tools - `search_frappe_docs` and
 `get_frappe_doc` - to ground answers about the Frappe framework in its actual
 documentation, rather than relying on memory. Framework APIs and conventions change
 across Frappe versions, so a stale recollection can be wrong in ways that break code
 on a live site.
+
+The `frappe` MCP server (used by `frappe-site-ops`) is for live site data only -
+if it also exposes tools with these same names, they search site *records*, not
+framework documentation. Always use the `frappe-docs` server's tools for framework
+documentation lookups.
+
+## Checking the connection
+
+`frappe-docs` has no dedicated ping/health-check tool. If you need to confirm it's
+reachable before relying on it - e.g. after setup, or when a lookup call fails
+unexpectedly - call `search_frappe_docs` with a broad, cheap query (e.g. `"frappe"`)
+and treat a normal result list as confirmation the server is up. A connection or
+startup failure (rather than an empty/error result) usually means
+`FRAPPE_DOCS_MCP_PATH` is wrong or the server hasn't been built (`npm run build`
+in the `frappe_docs_mcp` checkout).
 
 ## When to use this before other skills
 
