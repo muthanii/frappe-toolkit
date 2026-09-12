@@ -1,0 +1,18 @@
+{
+  "name": "frappe-toolkit-marketplace",
+  "owner": {
+    "name": "Muthana Alsaadi",
+    "url": "https://github.com/muthanii"
+  },
+  "plugins": [
+    {
+      "name": "frappe-toolkit",
+      "source": "./",
+      "description": "Work with a live Frappe/ERPNext site, look up Frappe framework documentation, and contribute to the Frappe open-source project.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Muthana Alsaadi"
+      }
+    }
+  ]
+}

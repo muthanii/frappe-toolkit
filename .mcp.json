@@ -16,6 +16,10 @@
         "FRAPPE_API_KEY": "${FRAPPE_API_KEY}",
         "FRAPPE_API_SECRET": "${FRAPPE_API_SECRET}"
       }
+    },
+    "frappe-docs": {
+      "command": "node",
+      "args": ["${FRAPPE_DOCS_MCP_PATH}/dist/server.js"]
     }
   }
 }

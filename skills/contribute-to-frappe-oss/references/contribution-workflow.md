@@ -38,15 +38,22 @@ contribution since scope can shift underneath a PR.
 - Use `frappe-docs-lookup` to verify framework behavior mentioned in the issue
   before assuming it's a bug rather than documented behavior.
 
-## 4. Reproducing and diagnosing
+## 4. Reproducing, fixing, and verifying
 
-- Reproduce the reported behavior before proposing a fix when a local or test
-  Frappe site is available.
+Use the `frappe-dev-container` skill for this step - it works inside an
+already-running `frappe/frappe_docker` devcontainer to reproduce and verify
+against, rather than guessing from the issue text or touching the live site behind
+the `frappe` MCP server. If no such container is running yet, ask the user to start
+one first (that skill does not launch it).
+
+- Reproduce the reported behavior in the container before proposing a fix. If it
+  doesn't reproduce, say so rather than assuming the fix target is correct.
 - Trace the bug to its root cause rather than patching the symptom - Frappe issues
   often surface in a UI layer but originate in a shared framework method used by
   many doctypes.
-- Write or update tests per the repo's test conventions (Frappe uses its own test
-  runner conventions distinct from plain pytest/unittest in many apps).
+- Apply the fix in the container, re-run the repro steps, and run the app's tests
+  via its own test runner conventions (`bench run-tests`, not plain
+  pytest/unittest) before considering the fix verified.
 
 ## 5. Opening the pull request
 
