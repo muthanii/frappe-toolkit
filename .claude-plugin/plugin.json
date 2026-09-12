@@ -1,0 +1,9 @@
+{
+  "name": "frappe-toolkit",
+  "version": "0.1.0",
+  "description": "Work with a live Frappe/ERPNext site, look up Frappe framework documentation, and contribute to the Frappe open-source project.",
+  "author": {
+    "name": "Muthana Alsaadi"
+  },
+  "keywords": ["frappe", "erpnext", "mcp", "oss"]
+}
