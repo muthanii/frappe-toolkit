@@ -17,6 +17,23 @@
         "FRAPPE_API_SECRET": "${FRAPPE_API_SECRET}"
       }
     },
+    "frappe-staging": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-e", "FRAPPE_URL",
+        "-e", "FRAPPE_API_KEY",
+        "-e", "FRAPPE_API_SECRET",
+        "muthanii/frappe_mcp"
+      ],
+      "env": {
+        "FRAPPE_URL": "${FRAPPE_STAGING_URL}",
+        "FRAPPE_API_KEY": "${FRAPPE_STAGING_API_KEY}",
+        "FRAPPE_API_SECRET": "${FRAPPE_STAGING_API_SECRET}"
+      }
+    },
     "frappe-docs": {
       "command": "node",
       "args": ["${FRAPPE_DOCS_MCP_PATH}/dist/server.js"]

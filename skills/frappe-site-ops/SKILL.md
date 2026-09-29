@@ -70,7 +70,8 @@ CRUD. Before calling it:
 
 ## Multi-site or multi-environment caution
 
-If the user has more than one Frappe/ERPNext site configured (e.g. staging vs.
-production), confirm which one they mean before any write operation - the bundled
-MCP server is pointed at whatever `FRAPPE_URL` is configured in this plugin's
-environment, so double-check that matches the site the user has in mind.
+If more than one Frappe/ERPNext instance is configured (e.g. a `frappe` and a
+`frappe-staging` server entry - see `frappe-connection-check`), each is a distinct
+site with its own URL and credentials. Confirm which instance the user means before
+any write operation, use that entry's tools, and state which instance you acted on.
+There is no implicit default that is safe for mutating operations.

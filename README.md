@@ -18,7 +18,9 @@ new commits re-syncs the marketplace so newly added/updated skills show up.
 
 ## Overview
 
-This plugin bundles two MCP servers and five skills that use them:
+This plugin bundles two MCP servers and five skills that use them. The live-site
+server can be configured for more than one Frappe/ERPNext instance at once (see
+"Multiple Frappe instances" under Setup):
 
 - Checking connectivity and API credentials against the live Frappe/ERPNext site
 - Reading and writing documents on a real Frappe/ERPNext site
@@ -33,6 +35,7 @@ This plugin bundles two MCP servers and five skills that use them:
 |---|---|---|
 | MCP Server | `frappe` | Docker-based Frappe MCP server (`muthanii/frappe_mcp`) for live site data: `frappe_ping`, `frappe_get_doc`, `frappe_search_docs`, `frappe_create_doc`, `frappe_update_doc`, `frappe_delete_doc`, `frappe_run_method`. |
 | MCP Server | `frappe-docs` | Node-based Frappe docs MCP server (`muthanii/frappe_docs_mcp`, run from a local clone) exposing `search_frappe_docs` and `get_frappe_doc` against `docs.frappe.io`. No dedicated ping tool - see `frappe-docs-lookup` for how to check the connection. |
+| MCP Server | `frappe-staging` | Optional second instance of the same `muthanii/frappe_mcp` Docker server, bound to its own `FRAPPE_STAGING_*` variables, for checking/working against a second site (e.g. staging) alongside `frappe` - see "Multiple Frappe instances". |
 | Skill | `frappe-connection-check` | Ping the live site (`frappe_ping`) to confirm the URL and API credentials work, and diagnose connection/credential failures before doing real work. |
 | Skill | `frappe-site-ops` | Read/search/create/update/delete Frappe documents and run whitelisted methods, with confirmation for anything destructive. |
 | Skill | `frappe-docs-lookup` | Search and read Frappe framework documentation before answering "how does Frappe do X" questions. |
@@ -53,6 +56,60 @@ needs three environment variables set wherever this plugin runs:
 Generate an API key/secret in Frappe under **User > API Access**. Docker must be
 available wherever the plugin's MCP server runs, and it must be able to pull or
 already have the `muthanii/frappe_mcp` image.
+
+### Multiple Frappe instances
+
+Each server entry is one instance: the entry's `FRAPPE_URL` / `FRAPPE_API_KEY` /
+`FRAPPE_API_SECRET` bind it to a single site, and a ping on one entry says nothing
+about another. Alongside the primary `frappe` entry, `.mcp.json` ships a
+`frappe-staging` entry so you can talk to a second instance at the same time:
+
+```json
+{
+  "mcpServers": {
+    "frappe": {
+      "command": "docker",
+      "args": ["run", "-i", "--rm",
+        "-e", "FRAPPE_URL", "-e", "FRAPPE_API_KEY", "-e", "FRAPPE_API_SECRET",
+        "muthanii/frappe_mcp"],
+      "env": {
+        "FRAPPE_URL": "${FRAPPE_URL}",
+        "FRAPPE_API_KEY": "${FRAPPE_API_KEY}",
+        "FRAPPE_API_SECRET": "${FRAPPE_API_SECRET}"
+      }
+    },
+    "frappe-staging": {
+      "command": "docker",
+      "args": ["run", "-i", "--rm",
+        "-e", "FRAPPE_URL", "-e", "FRAPPE_API_KEY", "-e", "FRAPPE_API_SECRET",
+        "muthanii/frappe_mcp"],
+      "env": {
+        "FRAPPE_URL": "${FRAPPE_STAGING_URL}",
+        "FRAPPE_API_KEY": "${FRAPPE_STAGING_API_KEY}",
+        "FRAPPE_API_SECRET": "${FRAPPE_STAGING_API_SECRET}"
+      }
+    }
+  }
+}
+```
+
+To use it, export the three staging variables where the plugin runs (set them from
+that site's own key/secret, scoped to that site's access - never reuse the primary
+instance's credentials):
+
+| Variable | Description |
+|---|---|
+| `FRAPPE_STAGING_URL` | Base URL of the second Frappe/ERPNext instance |
+| `FRAPPE_STAGING_API_KEY` | API key for a user on that instance |
+| `FRAPPE_STAGING_API_SECRET` | Matching API secret for that key |
+
+If you only run one instance, leave the staging variables unset - the
+`frappe-staging` entry then has nothing to connect to and it's simply unused (rename
+or remove the entry, or add more entries following the same pattern, as needed).
+Tools are namespaced by server, so the `frappe-connection-check` skill pings each
+configured entry separately and reports per-instance status; always state which
+instance you verified. Swapping a single entry's `FRAPPE_URL` between checks is not a
+substitute - it needs a config reload and changes which site later operations hit.
 
 The `frappe-docs` MCP server has no published Docker image - it's run directly with
 Node.js from a local clone:
@@ -88,6 +145,7 @@ already available in your session - it does not bundle its own GitHub MCP server
 ## Usage
 
 - "Ping Frappe" / "is the Frappe connection working?" → `frappe-connection-check`
+- "Check both staging and production Frappe" → `frappe-connection-check` (one ping per configured instance)
 - "Look up the Sales Order for customer X in Frappe" → `frappe-site-ops`
 - "Create a new Task in ERPNext for..." → `frappe-site-ops`
 - "How does Frappe handle child table validation?" → `frappe-docs-lookup`
