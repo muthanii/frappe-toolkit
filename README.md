@@ -18,8 +18,9 @@ new commits re-syncs the marketplace so newly added/updated skills show up.
 
 ## Overview
 
-This plugin bundles two MCP servers and four skills that use them:
+This plugin bundles two MCP servers and five skills that use them:
 
+- Checking connectivity and API credentials against the live Frappe/ERPNext site
 - Reading and writing documents on a real Frappe/ERPNext site
 - Looking up Frappe framework documentation before writing code or calling APIs
 - Reproducing and verifying fixes in a disposable Frappe dev container
@@ -32,6 +33,7 @@ This plugin bundles two MCP servers and four skills that use them:
 |---|---|---|
 | MCP Server | `frappe` | Docker-based Frappe MCP server (`muthanii/frappe_mcp`) for live site data: `frappe_ping`, `frappe_get_doc`, `frappe_search_docs`, `frappe_create_doc`, `frappe_update_doc`, `frappe_delete_doc`, `frappe_run_method`. |
 | MCP Server | `frappe-docs` | Node-based Frappe docs MCP server (`muthanii/frappe_docs_mcp`, run from a local clone) exposing `search_frappe_docs` and `get_frappe_doc` against `docs.frappe.io`. No dedicated ping tool - see `frappe-docs-lookup` for how to check the connection. |
+| Skill | `frappe-connection-check` | Ping the live site (`frappe_ping`) to confirm the URL and API credentials work, and diagnose connection/credential failures before doing real work. |
 | Skill | `frappe-site-ops` | Read/search/create/update/delete Frappe documents and run whitelisted methods, with confirmation for anything destructive. |
 | Skill | `frappe-docs-lookup` | Search and read Frappe framework documentation before answering "how does Frappe do X" questions. |
 | Skill | `frappe-dev-container` | Work inside an already-running `frappe/frappe_docker` devcontainer (it does not start one) to reproduce a reported issue and verify a fix before opening a PR. Supports `contribute-to-frappe-oss`; not a substitute for the live `frappe` MCP server. |
@@ -85,6 +87,7 @@ already available in your session - it does not bundle its own GitHub MCP server
 
 ## Usage
 
+- "Ping Frappe" / "is the Frappe connection working?" → `frappe-connection-check`
 - "Look up the Sales Order for customer X in Frappe" → `frappe-site-ops`
 - "Create a new Task in ERPNext for..." → `frappe-site-ops`
 - "How does Frappe handle child table validation?" → `frappe-docs-lookup`

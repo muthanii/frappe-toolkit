@@ -18,10 +18,11 @@ site: `frappe_ping`, `frappe_get_doc`, `frappe_search_docs`, `frappe_create_doc`
 
 ## Before doing anything else
 
-If a call to any `frappe_*` tool fails or the site's reachability is in doubt, call
-`frappe_ping` first to confirm the connection and credentials are working before
-troubleshooting further. Report connection failures plainly (bad URL, bad API
-key/secret, site down) rather than retrying blindly.
+If a call to any `frappe_*` tool fails or the site's reachability is in doubt, use
+the `frappe-connection-check` skill (`frappe_ping` plus failure diagnosis) to confirm
+the connection and credentials are working before troubleshooting further. Report
+connection failures plainly (bad URL, bad API key/secret, site down) rather than
+retrying blindly.
 
 ## Reading data
 
